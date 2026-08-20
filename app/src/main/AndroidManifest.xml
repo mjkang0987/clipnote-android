@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- AdMob 이 요구한다(광고 ID). 추적 목적으로 쓰지 않는다. -->
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+
+    <!-- 원본 바로가기·개인정보처리방침을 Custom Tabs 로 연다 — 브라우저가 있는지 물어야 한다. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <data android:scheme="https" />
+        </intent>
+    </queries>
+
+    <application
+        android:name=".ClipNoteApplication"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_rules"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.ClipNote">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize"
+            android:theme="@style/Theme.ClipNote">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!--
+              공유 시트에서 ClipNote 를 고르면 홈 입력칸에 링크가 채워진다.
+              iOS 는 이걸 위해 별도 확장 타깃과 App Group 이 필요했지만, 안드로이드는
+              같은 Activity 가 인텐트로 바로 받는다 — 확장이 없어서 언어 설정을 공유할 문제도 없다.
+            -->
+            <intent-filter android:label="@string/share_target_label">
+                <action android:name="android.intent.action.SEND" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:mimeType="text/plain" />
+            </intent-filter>
+
+            <!-- OAuth 콜백·공유 딥링크. iOS 와 같은 스킴이라 서버 설정을 공유한다. -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="clipnote" />
+            </intent-filter>
+        </activity>
+
+        <!--
+          AdMob App ID. 값은 secrets.properties 에서 온다(`admobAppId` placeholder).
+          **광고 단위 ID 를 여기 넣으면 앱이 실행 즉시 죽는다** — App ID 는 `~`, 광고 단위는 `/`.
+        -->
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="${admobAppId}" />
+    </application>
+</manifest>

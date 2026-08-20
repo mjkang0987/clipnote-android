@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  세션은 백업에서 뺀다. 다른 기기로 복원했을 때 그 기기가 남의 계정으로 로그인된 상태가 되면 안 된다.
+  로컬 클립(clipnote.db)은 백업한다 — 기기를 바꿔도 남아 있는 게 사용자가 기대하는 동작이다.
+-->
+<full-backup-content>
+    <exclude domain="sharedpref" path="clipnote.xml" />
+</full-backup-content>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  화면 문구가 아닌 것들 — 런처 이름과 공유 시트 라벨.
+  나머지 문구는 strings.xml(자동 생성)에 있다.
+-->
+<resources>
+    <string name="app_name" translatable="false">ClipNote</string>
+    <string name="share_target_label" translatable="false">ClipNote</string>
+</resources>
