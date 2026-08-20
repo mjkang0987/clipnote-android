@@ -91,6 +91,7 @@ cp secrets.example.properties secrets.properties   # 값 채우기 (gitignored)
 | 날짜 머리글 | 모델이 문자열 생성 | 모델은 케이스, 화면이 ICU 로 그림 | 표시 언어가 바뀌면 머리글도 따라와야 한다 |
 | 헤더 메뉴 | 사이드 슬라이드 | 상단 오버플로 메뉴 | 플랫폼 관례 |
 | 모듈 | 단일 타깃 | `:core` + `:app` | 로직을 에뮬레이터 없이 검증하려고 |
+| 개인정보 광고 문단 | ATT·IDFA | 광고 ID(AAID) | 안드로이드엔 ATT·IDFA 가 없다. 원문대로면 사실과 다른 고지가 된다 |
 
 ## 설정 파일
 - `secrets.example.properties` — 시크릿 템플릿(실제 `secrets.properties` 는 gitignored)
