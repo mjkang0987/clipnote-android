@@ -1,0 +1,66 @@
+# 자동 검증 — Android 빌드 + 유닛 테스트.
+#
+# iOS 저장소와 달리 리눅스 러너로 충분하다(에뮬레이터 없이 도는 JVM 테스트만 돌린다).
+# 계측 테스트가 필요해지면 별도 잡으로 분리한다 — 에뮬레이터 잡은 몇 배로 느리다.
+name: CI
+
+on:
+  push:
+    branches:
+      - "claude/**"
+      - "feature/**"
+    paths-ignore:
+      - "**/*.md"
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths-ignore:
+      - "**/*.md"
+
+# 같은 브랜치의 push 와 PR 이벤트가 동시에 떠도 빌드는 하나만(오래된 건 취소).
+concurrency:
+  group: ci-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    # push 는 항상, PR 은 포크가 아닐 때만(보안).
+    if: github.event_name == 'push' || github.event.pull_request.head.repo.full_name == github.repository
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # 시크릿이 없어도 빌드가 되도록 예시 파일을 쓴다(값은 전부 더미·공개 테스트 ID).
+      # 실제 시크릿을 CI 에 넣을 때는 이 단계를 `secrets.SECRETS_PROPERTIES` 로 바꾼다.
+      - name: Prepare secrets (빌드용 더미 — 실제 값 아님)
+        run: cp secrets.example.properties secrets.properties
+
+      # 문자열 리소스보다 코드가 먼저 깨지는 일이 드물어서 테스트를 먼저 돌린다 —
+      # 몇 초짜리 검사가 몇 분짜리 조립보다 앞에 있어야 실패를 빨리 본다.
+      - name: Unit tests
+        run: ./gradlew :core:test :app:testDebugUnitTest --stacktrace
+
+      - name: Assemble debug
+        run: ./gradlew :app:assembleDebug --stacktrace
+
+      - name: Lint
+        run: ./gradlew :app:lintDebug --stacktrace
+
+      - name: Upload test reports
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-reports
+          path: |
+            core/build/reports/tests/
+            app/build/reports/
