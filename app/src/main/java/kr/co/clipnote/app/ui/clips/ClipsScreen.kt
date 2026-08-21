@@ -75,6 +75,7 @@ import kr.co.clipnote.app.ui.home.copyToClipboard
 import kr.co.clipnote.app.ui.openInBrowser
 import kr.co.clipnote.app.ui.theme.AppColor
 import kr.co.clipnote.app.ui.theme.ShapeMd
+import kr.co.clipnote.app.ui.theme.softShadow
 import kr.co.clipnote.app.ui.theme.ShapeSm
 import kr.co.clipnote.core.clips.groupClipsByDate
 import kr.co.clipnote.core.model.UClip
@@ -472,6 +473,7 @@ private fun ClipRow(
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .softShadow(ShapeMd)
             .background(AppColor.surface, ShapeMd)
             .border(
                 width = if (isSelected) 2.dp else 1.dp,
@@ -492,7 +494,7 @@ private fun ClipRow(
                 imageUrl = clip.image,
                 gradient = gradient,
                 apiBase = apiBase,
-                modifier = Modifier.size(56.dp).clip(ShapeSm),
+                modifier = Modifier.size(64.dp).clip(ShapeMd),
             )
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(

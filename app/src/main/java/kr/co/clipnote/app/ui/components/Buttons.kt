@@ -22,6 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import kr.co.clipnote.app.ui.theme.AppColor
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Dp
 import kr.co.clipnote.app.ui.theme.ShapeSm
 
 /**
@@ -55,13 +57,15 @@ fun PrimaryButton(
     enabled: Boolean = true,
     loading: Boolean = false,
     color: Color = AppColor.brand,
+    height: Dp = 48.dp,
+    shape: Shape = ShapeSm,
     onClick: () -> Unit,
 ) {
     Button(
         onClick = onClick,
         enabled = enabled,
-        modifier = modifier.fillMaxWidth().height(48.dp),
-        shape = ShapeSm,
+        modifier = modifier.fillMaxWidth().height(height),
+        shape = shape,
         colors = ButtonDefaults.buttonColors(
             containerColor = color,
             contentColor = AppColor.white,
@@ -80,13 +84,15 @@ fun SecondaryButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     loading: Boolean = false,
+    height: Dp = 48.dp,
+    shape: Shape = ShapeSm,
     onClick: () -> Unit,
 ) {
     OutlinedButton(
         onClick = onClick,
         enabled = enabled,
-        modifier = modifier.fillMaxWidth().height(48.dp),
-        shape = ShapeSm,
+        modifier = modifier.fillMaxWidth().height(height),
+        shape = shape,
         border = BorderStroke(1.dp, if (enabled) AppColor.brand else AppColor.border),
         colors = ButtonDefaults.outlinedButtonColors(
             containerColor = AppColor.brandSoft,
@@ -106,13 +112,19 @@ fun SecondaryButton(
  * 어느 쪽이 취소인지 매번 다시 읽어야 한다.
  */
 @Composable
-fun GhostButton(label: String, modifier: Modifier = Modifier, onClick: () -> Unit) {
+fun GhostButton(
+    label: String,
+    modifier: Modifier = Modifier,
+    height: Dp = 48.dp,
+    shape: Shape = ShapeSm,
+    onClick: () -> Unit,
+) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(46.dp)
-            .background(AppColor.surface, ShapeSm)
-            .border(1.dp, AppColor.border, ShapeSm)
+            .height(height)
+            .background(AppColor.bg, shape)
+            .border(1.dp, AppColor.border, shape)
             .clickableRow(onClick),
         contentAlignment = Alignment.Center,
     ) {

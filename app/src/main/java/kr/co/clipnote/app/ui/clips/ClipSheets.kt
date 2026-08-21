@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedTextField
@@ -30,6 +31,7 @@ import kr.co.clipnote.app.ui.components.GhostButton
 import kr.co.clipnote.app.ui.components.PrimaryButton
 import kr.co.clipnote.app.ui.components.clickableRow
 import kr.co.clipnote.app.ui.theme.AppColor
+import kr.co.clipnote.app.ui.theme.Radius
 import kr.co.clipnote.app.ui.theme.ShapeFull
 import kr.co.clipnote.app.ui.theme.ShapeSm
 import kr.co.clipnote.core.util.parseTags
@@ -52,10 +54,11 @@ fun EditClipSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(),
-        containerColor = AppColor.bg,
+        containerColor = AppColor.surface,
+        shape = RoundedCornerShape(topStart = Radius.lg, topEnd = Radius.lg),
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(20.dp),
+            modifier = Modifier.fillMaxWidth().padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(i18n.t(R.string.clips_editTitle), fontSize = 17.sp, fontWeight = FontWeight.Bold, color = AppColor.fg)
@@ -111,10 +114,11 @@ fun TagApplySheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(),
-        containerColor = AppColor.bg,
+        containerColor = AppColor.surface,
+        shape = RoundedCornerShape(topStart = Radius.lg, topEnd = Radius.lg),
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(20.dp),
+            modifier = Modifier.fillMaxWidth().padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(i18n.t(R.string.clips_bulkTagTitle), fontSize = 17.sp, fontWeight = FontWeight.Bold, color = AppColor.fg)
@@ -166,7 +170,7 @@ private fun ModeChip(label: String, active: Boolean, onClick: () -> Unit) {
         fontWeight = FontWeight.SemiBold,
         color = if (active) AppColor.brandStrong else AppColor.fgMuted,
         modifier = Modifier
-            .background(if (active) AppColor.brandSoft else AppColor.surface, ShapeFull)
+            .background(if (active) AppColor.brandSoft else AppColor.bg, ShapeFull)
             .border(1.dp, if (active) AppColor.brand else AppColor.border, ShapeFull)
             .clickableRow(onClick)
             .padding(horizontal = 16.dp, vertical = 8.dp),
@@ -191,8 +195,8 @@ private fun SheetField(value: String, onValueChange: (String) -> Unit, placehold
             focusedTextColor = AppColor.fg,
             unfocusedTextColor = AppColor.fg,
             cursorColor = AppColor.fg,
-            focusedContainerColor = AppColor.surface,
-            unfocusedContainerColor = AppColor.surface,
+            focusedContainerColor = AppColor.bg,
+            unfocusedContainerColor = AppColor.bg,
             focusedBorderColor = AppColor.brand,
             unfocusedBorderColor = AppColor.border,
         ),

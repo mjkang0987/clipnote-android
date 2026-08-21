@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Text
@@ -23,6 +24,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -30,7 +32,8 @@ import kr.co.clipnote.app.ui.theme.AppColor
 import kr.co.clipnote.app.ui.theme.ShapeFull
 import kr.co.clipnote.app.ui.theme.ShapeMd
 import kr.co.clipnote.app.ui.theme.ShapeSm
-import kr.co.clipnote.app.ui.theme.brush
+import kr.co.clipnote.app.ui.theme.clipGradient
+import kr.co.clipnote.app.ui.theme.softShadow
 import kr.co.clipnote.core.theme.ClipGradient
 import kr.co.clipnote.core.util.proxiedImageUrl
 
@@ -48,20 +51,34 @@ fun TagChip(text: String, small: Boolean = false) {
     )
 }
 
-/** 태그 필터 칩. */
+/**
+ * 태그 필터 칩.
+ *
+ * 활성은 **채운 브랜드 + 흰 글자**다(웹 `ClipsClient` 와 같은 모양). 연보라 배경은 태그 칩
+ * (`TagChip`)의 것이라, 필터에도 쓰면 "고른 것" 과 "그냥 태그" 가 같아 보인다.
+ *
+ * 높이를 44dp 아래로 두지 않는다 — 가이드 §6 의 최소 터치 영역이고, 글자만 기준으로 잡으면
+ * 33dp 밖에 안 나온다.
+ */
 @Composable
 fun FilterChip(label: String, active: Boolean, onClick: () -> Unit) {
-    Text(
-        text = label,
-        fontSize = 13.sp,
-        fontWeight = FontWeight.Medium,
-        color = if (active) AppColor.brandStrong else AppColor.fgMuted,
+    Box(
         modifier = Modifier
-            .background(if (active) AppColor.brandSoft else AppColor.surface, ShapeFull)
+            .heightIn(min = 44.dp)
+            .background(if (active) AppColor.brand else AppColor.bg, ShapeFull)
             .border(1.dp, if (active) AppColor.brand else AppColor.border, ShapeFull)
             .clickableRow(onClick)
-            .padding(horizontal = 12.dp, vertical = 7.dp),
-    )
+            .padding(horizontal = 14.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = label,
+            fontSize = 14.sp,
+            fontWeight = if (active) FontWeight.SemiBold else FontWeight.Medium,
+            color = if (active) AppColor.white else AppColor.fgMuted,
+            textAlign = TextAlign.Center,
+        )
+    }
 }
 
 /**
@@ -78,7 +95,7 @@ fun ClipThumbnail(
     apiBase: String,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier = modifier.background(gradient.brush())) {
+    Box(modifier = modifier.clipGradient(gradient)) {
         val proxied = proxiedImageUrl(imageUrl, apiBase)
         if (proxied != null) {
             AsyncImage(
@@ -101,10 +118,13 @@ fun ClipCard(
     tags: List<String>,
     apiBase: String,
     modifier: Modifier = Modifier,
+    thumbnailSize: Dp = 56.dp,
+    trailing: (@Composable () -> Unit)? = null,
 ) {
     Row(
         modifier = modifier
             .fillMaxWidth()
+            .softShadow(ShapeMd)
             .background(AppColor.surface, ShapeMd)
             .border(1.dp, AppColor.border, ShapeMd)
             .padding(12.dp),
@@ -114,7 +134,7 @@ fun ClipCard(
             imageUrl = imageUrl,
             gradient = gradient,
             apiBase = apiBase,
-            modifier = Modifier.size(56.dp).clip(ShapeSm),
+            modifier = Modifier.size(thumbnailSize).clip(ShapeMd),
         )
         Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(2.dp)) {
             Text(
@@ -137,6 +157,7 @@ fun ClipCard(
                 }
             }
         }
+        trailing?.invoke()
     }
 }
 
@@ -163,8 +184,9 @@ fun SharePreviewCard(
             modifier = Modifier
                 .fillMaxWidth()
                 .aspectRatio(1200f / 630f)
+                .softShadow(ShapeMd)
                 .clip(ShapeMd)
-                .background(gradient.brush()),
+                .clipGradient(gradient),
         ) {
             val proxied = proxiedImageUrl(imageUrl, apiBase)
             if (proxied != null) {

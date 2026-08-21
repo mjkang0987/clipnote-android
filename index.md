@@ -82,6 +82,34 @@ cp secrets.example.properties secrets.properties   # 값 채우기 (gitignored)
 - **AdMob**: 실 ID 는 아직 없다. `secrets.example.properties` 의 구글 테스트 ID 로 동작한다.
 - **배포**: Play 콘솔·서명 키·업로드 파이프라인 없음.
 
+## 디자인
+
+**source of truth 는 웹 저장소다** — `clipnote/design-guide.md`(토큰·규칙)와 실제 구현
+(`app/globals.css`, `app/_components/*.tsx`). 가이드와 구현이 어긋나는 곳은 **구현을 따랐다**
+(예: 가이드는 "입력·버튼은 md(12)" 라고 하지만 구현은 `rounded-[8px]` 을 쓴다).
+
+| 항목 | 값 | 근거 |
+|------|-----|------|
+| 색 | 브랜드 3 · 중립 5 · 시맨틱 3, 웹 토큰과 동일 | 가이드 §2 |
+| 그라디언트 | 8종, **135도 고정** | 가이드 §3 |
+| 서체 | **Pretendard** (400/500/600/700 번들) | 가이드 §4 · `globals.css` |
+| 모서리 | 입력·버튼 8 · 카드 12 · 시트 16 | 웹 구현 |
+| 그림자 | `shadow-soft` — 카드·시트·공유 카드에만 | 가이드 §5 |
+| 필터 칩 | 활성 = **채운 브랜드 + 흰 글자** | 웹 `ClipsClient` |
+| 태그 칩 | brand-soft 배경 + brand-strong 글자, full 모서리 | 가이드 §6 |
+| 터치 영역 | 최소 44dp | 가이드 §6 |
+| 다크 모드 | 없음(라이트만) | 가이드 §8 — 정식 대응 후순위 |
+
+`Brush.linearGradient` 기본값은 **상자 모서리에서 모서리로** 그어서 각도가 비율을 따라간다 —
+공유 카드(1200:630)에서는 30도쯤으로 누워 웹과 눈에 띄게 달라진다. `Theme.kt` 의
+`brush(size)` 가 비율과 무관하게 45도(= CSS `135deg`)로 고정한다.
+
+### 서체 용량
+
+Pretendard 는 한글 전 음절을 담아 굵기 하나가 1.5MB 다. 네 벌이면 6MB(APK 에서는 압축돼
+절반쯤). 줄이려면 굵기를 400/700 둘로 낮추면 되지만 Medium·SemiBold 자리가 합성 굵기로
+흐려진다. 라이선스는 SIL OFL 1.1 이고 사본은 `app/src/main/assets/licenses/` 에 실린다.
+
 ## iOS 와 일부러 다르게 한 것
 
 | 항목 | iOS | 안드로이드 | 이유 |

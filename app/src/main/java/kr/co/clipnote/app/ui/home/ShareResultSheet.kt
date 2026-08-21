@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
@@ -34,6 +36,8 @@ import kr.co.clipnote.app.ui.components.PrimaryButton
 import kr.co.clipnote.app.ui.components.SecondaryButton
 import kr.co.clipnote.app.ui.openInBrowser
 import kr.co.clipnote.app.ui.theme.AppColor
+import kr.co.clipnote.app.ui.theme.Radius
+import kr.co.clipnote.app.ui.theme.Radius
 import kr.co.clipnote.app.ui.theme.ShapeSm
 import kr.co.clipnote.core.util.buildShareText
 
@@ -56,9 +60,14 @@ fun ShareResultSheet(
     var saving by remember { mutableStateOf(false) }
     var saved by remember { mutableStateOf(false) }
 
-    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState, containerColor = AppColor.bg) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        containerColor = AppColor.surface,
+        shape = RoundedCornerShape(topStart = Radius.lg, topEnd = Radius.lg),
+    ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(20.dp),
+            modifier = Modifier.fillMaxWidth().padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
             Text(i18n.t(R.string.home_result_title), fontSize = 17.sp, fontWeight = FontWeight.Bold, color = AppColor.fg)
@@ -72,7 +81,7 @@ fun ShareResultSheet(
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(AppColor.surface, ShapeSm)
+                    .background(AppColor.bg, ShapeSm)
                     .border(1.dp, AppColor.border, ShapeSm)
                     .padding(horizontal = 12.dp, vertical = 12.dp),
             )

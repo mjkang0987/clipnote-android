@@ -15,6 +15,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalBottomSheet
@@ -45,6 +46,7 @@ import kr.co.clipnote.app.ui.info.BrandLogo
 import kr.co.clipnote.app.ui.info.CompareBoxes
 import kr.co.clipnote.app.ui.openInBrowser
 import kr.co.clipnote.app.ui.theme.AppColor
+import kr.co.clipnote.app.ui.theme.Radius
 import kr.co.clipnote.app.ui.theme.ShapeFull
 import kr.co.clipnote.app.ui.theme.ShapeMd
 import kr.co.clipnote.core.auth.AuthErrorMessage
@@ -100,7 +102,8 @@ fun LoginSheet(onDismiss: () -> Unit) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = AppColor.bg,
+        containerColor = AppColor.surface,
+        shape = RoundedCornerShape(topStart = Radius.lg, topEnd = Radius.lg),
     ) {
         Column(
             modifier = Modifier

@@ -15,7 +15,10 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.shape.RoundedCornerShape
 import kr.co.clipnote.app.ui.theme.AppColor
+import kr.co.clipnote.app.ui.theme.Radius
+import kr.co.clipnote.app.ui.theme.ShapeMd
 
 /** 확인 레이어의 강조. 웹이 레이어마다 다르게 준 무게를 그대로 옮긴다. */
 enum class ConfirmEmphasis {
@@ -57,10 +60,11 @@ fun ConfirmLayer(
     ModalBottomSheet(
         onDismissRequest = { if (!busy) onDismissRequest() },
         sheetState = sheetState,
-        containerColor = AppColor.bg,
+        containerColor = AppColor.surface,
+        shape = RoundedCornerShape(topStart = Radius.lg, topEnd = Radius.lg),
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(20.dp),
+            modifier = Modifier.fillMaxWidth().padding(24.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(title, fontSize = 17.sp, fontWeight = FontWeight.Bold, color = AppColor.fg)
@@ -69,13 +73,16 @@ fun ConfirmLayer(
                 modifier = Modifier.fillMaxWidth().padding(top = 12.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                GhostButton(cancelLabel, modifier = Modifier.weight(1f)) { if (!busy) onCancel() }
+                GhostButton(cancelLabel, modifier = Modifier.weight(1f), shape = ShapeMd) {
+                    if (!busy) onCancel()
+                }
                 PrimaryButton(
                     label = if (busy) busyLabel ?: confirmLabel else confirmLabel,
                     modifier = Modifier.weight(1f),
                     enabled = !busy,
                     loading = busy,
                     color = if (emphasis == ConfirmEmphasis.DESTRUCTIVE) AppColor.danger else AppColor.brand,
+                    shape = ShapeMd,
                     onClick = onConfirm,
                 )
             }

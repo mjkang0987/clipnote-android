@@ -63,6 +63,15 @@ python3 scripts/sync-localizations.py ../clipnote-ios/Shared/Localization/Locali
 그건 **시스템 언어**를 따른다. 앱 안에서 고른 언어로 그리려면 그 언어의 `Resources` 에서
 읽어야 해서, 화면은 `LocalI18n.current.t(R.string.…)` 을 거친다.
 
+## 디자인
+
+토큰·규칙의 source of truth 는 **웹 저장소**(`clipnote/design-guide.md` + `app/globals.css`)다.
+iOS 를 보고 옮기지 않는다. 자세한 대조표는 [`index.md`](./index.md) "디자인" 절.
+
+브랜드 서체 **Pretendard**(SIL OFL 1.1)를 번들한다 — 안드로이드 기본 한글 서체는 자소 폭·
+굵기 대비가 달라서 같은 문구가 다른 제품처럼 보인다. 라이선스 사본은
+`app/src/main/assets/licenses/`.
+
 ## 자산
 
 앱 아이콘·브랜드 아이콘·로딩 공룡 스프라이트는 iOS 저장소의 원본에서 만들었다

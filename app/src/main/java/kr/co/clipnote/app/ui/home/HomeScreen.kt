@@ -64,6 +64,7 @@ import kr.co.clipnote.app.ui.onboarding.tourAnchor
 import kr.co.clipnote.app.ui.theme.AppColor
 import kr.co.clipnote.app.ui.theme.ShapeMd
 import kr.co.clipnote.app.ui.theme.ShapeSm
+import kr.co.clipnote.app.ui.theme.softShadow
 import kr.co.clipnote.core.util.buildShareText
 import kr.co.clipnote.core.util.prettyHost
 
@@ -255,6 +256,7 @@ private fun FormCard(vm: HomeViewModel, onUrlChanged: (String) -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(top = 8.dp)
+            .softShadow(ShapeMd)
             .background(AppColor.surface, ShapeMd)
             .border(1.dp, AppColor.border, ShapeMd)
             .padding(14.dp),
@@ -519,7 +521,7 @@ private fun ErrorBox(text: String) {
             .fillMaxWidth()
             .padding(top = 16.dp)
             .background(AppColor.danger.copy(alpha = 0.1f), ShapeSm)
-            .padding(12.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
     )
 }
 
@@ -533,7 +535,8 @@ private fun WarnBox(text: String) {
             .fillMaxWidth()
             .padding(top = 16.dp)
             .background(AppColor.warning.copy(alpha = 0.1f), ShapeSm)
-            .padding(12.dp),
+            .border(1.dp, AppColor.warning.copy(alpha = 0.3f), ShapeSm)
+            .padding(horizontal = 16.dp, vertical = 12.dp),
     )
 }
 

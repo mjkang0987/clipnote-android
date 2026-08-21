@@ -8,8 +8,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -70,6 +76,7 @@ fun LocalClipsScreen() {
     var clips by remember { mutableStateOf<List<UClip>?>(null) }
     var migrateOpen by remember { mutableStateOf(false) }
     var deleteAllOpen by remember { mutableStateOf(false) }
+    var pendingDelete by remember { mutableStateOf<UClip?>(null) }
 
     suspend fun reload() {
         clips = container.localClips.all()
@@ -146,6 +153,8 @@ fun LocalClipsScreen() {
                             modifier = Modifier.clickableRow {
                                 openableWebUrl(clip.url)?.let { openInBrowser(context, it) }
                             },
+                            thumbnailSize = 64.dp,
+                            trailing = { RowMenu(onDelete = { pendingDelete = clip }) },
                         )
                     }
                 }
@@ -158,6 +167,30 @@ fun LocalClipsScreen() {
             pendingCount = list?.size ?: 0,
             onDismiss = { migrateOpen = false },
             onFinished = { scope.launch { reload() } },
+        )
+    }
+
+    pendingDelete?.let { clip ->
+        ConfirmLayer(
+            title = i18n.t(R.string.clips_deleteTitle),
+            message = emphasized(
+                i18n.t(R.string.clips_deleteBody, clip.title),
+                listOf(clip.title),
+                AppColor.fg,
+            ),
+            confirmLabel = i18n.t(R.string.common_delete),
+            cancelLabel = i18n.t(R.string.common_cancel),
+            emphasis = ConfirmEmphasis.DESTRUCTIVE,
+            onConfirm = {
+                pendingDelete = null
+                scope.launch {
+                    container.localClips.delete(clip.url)
+                    ClipsRefresh.emit()
+                    reload()
+                }
+            },
+            onCancel = { pendingDelete = null },
+            onDismissRequest = { pendingDelete = null },
         )
     }
 
@@ -180,5 +213,23 @@ fun LocalClipsScreen() {
             onCancel = { deleteAllOpen = false },
             onDismissRequest = { deleteAllOpen = false },
         )
+    }
+}
+
+/** 행의 ⋮ 메뉴 — 이 화면에서 할 수 있는 건 삭제뿐이다(로컬 클립은 공유 링크가 없다). */
+@Composable
+private fun RowMenu(onDelete: () -> Unit) {
+    val i18n = LocalI18n.current
+    var open by remember { mutableStateOf(false) }
+    Box {
+        IconButton(onClick = { open = true }) {
+            Icon(Icons.Filled.MoreVert, contentDescription = null, tint = AppColor.fgMuted)
+        }
+        DropdownMenu(expanded = open, onDismissRequest = { open = false }, containerColor = AppColor.bg) {
+            DropdownMenuItem(
+                text = { Text(i18n.t(R.string.common_delete), color = AppColor.danger) },
+                onClick = { open = false; onDelete() },
+            )
+        }
     }
 }
